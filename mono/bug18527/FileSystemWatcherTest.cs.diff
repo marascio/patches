@@ -1,0 +1,202 @@
+Index: class/System/Test/System.IO/FileSystemWatcherTest.cs
+===================================================================
+--- class/System/Test/System.IO/FileSystemWatcherTest.cs	(revision 76226)
++++ class/System/Test/System.IO/FileSystemWatcherTest.cs	(working copy)
+@@ -2,6 +2,7 @@
+ //
+ // Authors:
+ // 	Gonzalo Paniagua Javier (gonzalo@ximian.com)
++//	Louis R. Marascio (louis@fitnr.com)
+ //
+ // (C) 2004 Novell, Inc.  http://www.novell.com
+ // 
+@@ -9,12 +10,17 @@
+ using NUnit.Framework;
+ using System;
+ using System.IO;
++using System.Threading;
+ 
+ namespace MonoTests.System.IO
+ {
+ 	[TestFixture]
+ 	public class FileSystemWatcherTest : Assertion
+ 	{
++		// Path to the temporary directory that we'll use for various tests
++		private static string tempPath = Path.Combine (Path.GetTempPath(), 
++								"MonoTests.System.IO.FileSystemWatcherTest");
++
+ 		[Test]
+ 		public void CheckDefaults ()
+ 		{
+@@ -81,6 +87,159 @@
+ 			FileSystemWatcher fw = new FileSystemWatcher (Path.GetTempPath (), "*");
+ 			fw.Path = "*";
+ 		}
++
++		#region FileSystemWatcher Event Tests
++
++		private AutoResetEvent eventFired  = new AutoResetEvent (false);
++		private static string tempFile     = "FSWTempFile";
++		private static string tempFilePath = Path.Combine (tempPath, tempFile);
++
++		// Used to store state from each event call back
++		private string lastName, lastFullPath;
++		private WatcherChangeTypes lastChangeType;
++
++		[Test]
++		public void CheckChangedEvent ()
++		{
++			// Test various combinations of the Changed event. We pass in a test name, our test
++			// filename, a test filter, and whether we expect the event to fire or not.
++			DoChangedEventTest ("ChangedWildcard",        tempFilePath,        "*.*",        true);
++			DoChangedEventTest ("ChangedSpecificFile",    tempFilePath+"2",    tempFile+"2", true);
++			DoChangedEventTest ("ChangedOutsideOfFilter", tempFilePath,        "fooFilter",  false);
++			DoChangedEventTest ("ChangedFilterExtGood",   tempFilePath+".abc", "*.abc",      true);
++			DoChangedEventTest ("ChangedFilterExtBad",    tempFilePath+".xyz", "*.abc",      false);
++		}
++
++		// Test various combinations of the Changed event handler
++		public void DoChangedEventTest (string testName, string filename, string filter, bool eventExpected)
++		{
++			CleanupTempDir ();
++
++			// Open our temporary file and write some initial data, before we start monitoring for events.
++			using (StreamWriter w = new StreamWriter (filename)) {
++				w.WriteLine ("foo");
++			}
++		
++			FileSystemWatcher fw = new FileSystemWatcher (tempPath, filter);
++			fw.Changed += new FileSystemEventHandler (OnFileSystemWatcherEvent);
++			fw.EnableRaisingEvents = true;
++
++			// Now that we're monitoring for Changed events, write some more data to the same file.
++			using (StreamWriter w = new StreamWriter (filename, true)) {
++				w.WriteLine ("bar");
++			}
++
++			bool gotEvent = eventFired.WaitOne (1000, true);
++			
++			fw.EnableRaisingEvents = false;
++			fw.Dispose ();
++	
++			AssertEquals (testName+"-#15", gotEvent, eventExpected);
++			if (eventExpected) {
++				AssertEquals (testName+"-#16", filename, lastFullPath);
++				AssertEquals (testName+"-#17", WatcherChangeTypes.Changed, lastChangeType);
++			}
++
++			lastName = lastFullPath = null;
++		}
++
++		[Test]
++		public void CheckCreatedEvent ()
++		{
++			CleanupTempDir ();
++
++			// Make sure the file isn't there before we try to create it
++			if (File.Exists(tempFilePath))
++				File.Delete (tempFilePath);
++
++			FileSystemWatcher fw = new FileSystemWatcher (tempPath);
++			fw.Created += new FileSystemEventHandler (OnFileSystemWatcherEvent);
++			fw.EnableRaisingEvents = true;
++
++			// Now that we're monitoring for Created events, create the file.
++			File.Create (tempFilePath);
++
++			bool gotEvent = eventFired.WaitOne (1000, true);
++			
++			fw.EnableRaisingEvents = false;
++			fw.Dispose ();
++		
++			AssertEquals ("#07", gotEvent, true);
++			AssertEquals ("#08", tempFile, lastName);
++			AssertEquals ("#09", tempFilePath, lastFullPath);
++			AssertEquals ("#10", WatcherChangeTypes.Created, lastChangeType);
++			
++			lastName = lastFullPath = null;
++		}
++
++		[Test]
++		public void CheckDeletedEvent ()
++		{
++			CleanupTempDir ();
++
++			// Make sure the file does exist before we try to delete it
++			if (!File.Exists(tempFilePath)) 
++				File.Create (tempFilePath);
++
++			FileSystemWatcher fw = new FileSystemWatcher (tempPath);
++			fw.Deleted += new FileSystemEventHandler (OnFileSystemWatcherEvent);
++			fw.EnableRaisingEvents = true;
++
++			// Now that we're monitoring for Deleted events, remove the file.
++			File.Delete (tempFilePath);
++
++			bool gotEvent = eventFired.WaitOne (1000, true);
++			
++			fw.EnableRaisingEvents = false;
++			fw.Dispose ();
++		
++			AssertEquals ("#11", gotEvent, true);
++			AssertEquals ("#12", tempFile, lastName);
++			AssertEquals ("#13", tempFilePath, lastFullPath);
++			AssertEquals ("#14", WatcherChangeTypes.Deleted, lastChangeType);
++
++			lastName = lastFullPath = null;
++		}
++
++		// One event handler for all of our tests. Just save the relevant data
++		// so the individual test can assert on it.
++		private void OnFileSystemWatcherEvent (object source, FileSystemEventArgs e)
++		{
++			lastName = e.Name;
++			lastFullPath = e.FullPath;
++			lastChangeType = e.ChangeType;
++			eventFired.Set ();		
++		}
++
++		#endregion
++	
++		[TestFixtureSetUp]
++		public void FixtureSetup ()
++		{
++			// Make sure a clean temporary directory exists 
++			RemoveTempDir ();
++			Directory.CreateDirectory (tempPath);
++		}
++
++		[TestFixtureTearDown]
++		public void FixtureTeardown ()
++		{
++			RemoveTempDir ();
++		}
++
++		// Whack the temporary directory
++		public void RemoveTempDir ()
++		{
++			if (Directory.Exists (tempPath))
++				Directory.Delete (tempPath, true);
++		}
++
++		// Remove all files in the temporary directory
++		private void CleanupTempDir ()
++		{
++			if (Directory.Exists (tempPath))
++				File.Delete (Path.Combine (tempPath, "*.*"));
++		}
+ 	}
+ }
+ 
+Index: class/System/Test/System.IO/ChangeLog
+===================================================================
+--- class/System/Test/System.IO/ChangeLog	(revision 76226)
++++ class/System/Test/System.IO/ChangeLog	(working copy)
+@@ -1,3 +1,7 @@
++2007-04-24  Louis R. Marascio <louis@fitnr.com>
++	* FileSystemWatcherTest.cs: add unit tests for Created, Deleted
++	  and Changed events.
++
+ 2004-01-16  Gonzalo Paniagua Javier <gonzalo@ximian.com>
+ 
+ 	* FileSystemWatcherTest.cs: new test.
