@@ -1,0 +1,23 @@
+$Id$
+
+Original Version: palmtree-0.0.6
+Latest Version  : palmtree-0.0.6
+Download From   : http://svn.fitnr.com/public/patches/palmtree/add_mongrel_conf_script
+
+Patch the mongrel_cluster recipes distributed with the Palmtree
+Capistrano recipes gem (http://rubyforge.org/projects/palmtree) to
+provide a configuration option for specifying mongrel_rails -S command
+line option.
+
+This patch adds a new configuration option, :mongrel_conf_script, that
+can be set in your Capistrano recipe, for example: 
+
+    set :mongrel_conf_script, "#{deploy_to}/current/config/mongrel.conf"
+
+If this is set when you run the mongrel:cluster:configure task the
+generated mongrel_cluster.yml will contain a line similiar to:
+
+    config_script: /var/www/app/current/config/mongrel.conf
+
+Where, of course, #{mongrel_conf_script} contains the text specified in
+your Capistrano recipe.

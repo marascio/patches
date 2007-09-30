@@ -1,0 +1,23 @@
+--- lib/palmtree/recipes/mongrel_cluster.rb	2007-09-30 15:54:52.000000000 -0500
++++ lib/palmtree/recipes/mongrel_cluster.rb.mine	2007-09-30 15:55:28.000000000 -0500
+@@ -4,6 +4,7 @@
+   set :mongrel_address, "127.0.0.1"
+   set :mongrel_environment, "production"
+   set :mongrel_conf, nil
++  set :mongrel_conf_script, nil
+   set :mongrel_user, nil
+   set :mongrel_group, nil
+   set :mongrel_prefix, nil
+@@ -26,6 +27,7 @@
+         argv << "-a #{mongrel_address}"
+         argv << "-c #{current_path}"
+         argv << "-C #{mongrel_conf}"
++        argv << "-S #{mongrel_conf_script}" if mongrel_conf_script
+         argv << "--user #{mongrel_user}" if mongrel_user
+         argv << "--group #{mongrel_group}" if mongrel_group
+         argv << "--prefix #{mongrel_prefix}" if mongrel_prefix
+@@ -91,3 +93,4 @@
+     end
+   end
+ end
++
