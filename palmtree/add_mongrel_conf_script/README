@@ -4,6 +4,9 @@ Original Version: palmtree-0.0.6
 Latest Version  : palmtree-0.0.6
 Download From   : http://svn.fitnr.com/public/trunk/patches/palmtree/add_mongrel_conf_script/mongrel_cluster.rb.diff
 
+Description
+===========
+
 Patch the mongrel_cluster recipes distributed with the Palmtree
 Capistrano recipes gem (http://rubyforge.org/projects/palmtree) to
 provide a configuration option for specifying mongrel_rails -S command
@@ -19,5 +22,10 @@ generated mongrel_cluster.yml will contain a line similiar to:
 
     config_script: /var/www/app/current/config/mongrel.conf
 
-Where, of course, #{mongrel_conf_script} contains the text specified in
-your Capistrano recipe.
+
+License
+=======
+
+This patch is Copyright (c) 2007 Louis R. Marascio and is released under
+the MIT license (http://www.opensource.org/licenses/mit-license.php).
+
