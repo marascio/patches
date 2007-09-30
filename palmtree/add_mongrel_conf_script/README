@@ -2,7 +2,7 @@ $Id$
 
 Original Version: palmtree-0.0.6
 Latest Version  : palmtree-0.0.6
-Download From   : http://svn.fitnr.com/public/patches/palmtree/add_mongrel_conf_script
+Download From   : http://svn.fitnr.com/public/trunk/patches/palmtree/add_mongrel_conf_script/mongrel_cluster.rb.diff
 
 Patch the mongrel_cluster recipes distributed with the Palmtree
 Capistrano recipes gem (http://rubyforge.org/projects/palmtree) to
