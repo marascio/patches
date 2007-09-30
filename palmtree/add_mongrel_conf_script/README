@@ -22,7 +22,6 @@ generated mongrel_cluster.yml will contain a line similiar to:
 
     config_script: /var/www/app/current/config/mongrel.conf
 
-
 License
 =======
 
