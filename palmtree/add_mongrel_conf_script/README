@@ -1,5 +1,6 @@
 $Id$
 
+Author          : Louis R. Marascio <louis@fitnr.com>
 Original Version: palmtree-0.0.6
 Latest Version  : palmtree-0.0.6
 Download From   : http://svn.fitnr.com/public/trunk/patches/palmtree/add_mongrel_conf_script/mongrel_cluster.rb.diff
