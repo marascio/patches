@@ -1,0 +1,43 @@
+Index: lib/capistrano/recipes/deploy/scm/subversion.rb
+===================================================================
+--- lib/capistrano/recipes/deploy/scm/subversion.rb	(revision 7722)
++++ lib/capistrano/recipes/deploy/scm/subversion.rb	(working copy)
+@@ -43,7 +43,10 @@
+ 
+         # Returns an "svn log" command for the two revisions.
+         def log(from, to=nil)
+-          scm :log, repository, authentication, "-r#{from}:#{to || head}"
++          start_rev = from.to_i + 1
++          if start_rev <= to.to_i 
++            scm :log, repository, authentication, "-r#{start_rev}:#{to || head}"
++          end
+         end
+ 
+         # Attempts to translate the given revision identifier to a "real"
+Index: lib/capistrano/recipes/deploy.rb
+===================================================================
+--- lib/capistrano/recipes/deploy.rb	(revision 7722)
++++ lib/capistrano/recipes/deploy.rb	(working copy)
+@@ -36,6 +36,8 @@
+ _cset(:source)            { Capistrano::Deploy::SCM.new(scm, self) }
+ _cset(:real_revision)     { source.local.query_revision(revision) { |cmd| with_env("LC_ALL", "C") { `#{cmd}` } } }
+ 
++_cset(:head_revision)     { source.local.query_revision(source.head) { |cmd| with_env("LC_ALL", "C") { `#{cmd}` } } }
++
+ _cset(:strategy)          { Capistrano::Deploy::Strategy.new(deploy_via, self) }
+ 
+ _cset(:release_name)      { set :deploy_timestamped, true; Time.now.utc.strftime("%Y%m%d%H%M%S") }
+@@ -446,7 +448,12 @@
+       might not be supported on all SCM's.
+     DESC
+     task :default, :except => { :no_release => true } do
+-      system(source.local.log(current_revision))
++      cmd = source.local.log(current_revision, head_revision) 
++      if cmd
++        system(cmd) 
++      else
++        puts "There are no pending changesets"
++      end
+     end
+   end
+ 
