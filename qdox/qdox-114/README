@@ -1,6 +1,7 @@
 $Id$
 
 Original Version: qdox-trunk revision 485
+Latest Version  : qdox-trunk revision 485
 Download From   : http://svn.fitnr.com/public/trunk/patches/qdox/qdox-114
 
 Description
@@ -19,11 +20,11 @@ or
 This patch updates the lexer to properly account for these situations.
 When the lexer tokenizes the input it fails to account for two things:
   
-  1) Reset newMode to false when ';' is encountered, within the
-     ASSIGNMENT state.
+1.  Reset newMode to false when ';' is encountered, within the
+    ASSIGNMENT state.
   
-  2) Recognize that we are within a bracket, '[', and thus when we
-     encounter a '<' or '>' token don't increase our nesting.
+2.  Recognize that we are within a bracket, '[', and thus when we
+    encounter a '<' or '>' token don't increase our nesting.
 
 License
 =======
