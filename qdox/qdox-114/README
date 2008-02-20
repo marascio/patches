@@ -1,0 +1,31 @@
+$Id$
+
+Original Version: qdox-trunk revision 485
+Download From   : http://svn.fitnr.com/public/trunk/patches/qdox/qdox-114
+
+Description
+===========
+
+QDox does not properly parse the < and > operators after encountering a
+'new block'. For example, the following code snippets do not parse:
+
+        int a[] = new int[1 << 16];
+
+or
+
+        Object o = new Object();
+        int a = 1 << 30;
+
+This patch updates the lexer to properly account for these situations.
+In the first scenario we need to recognize that we are within an array
+intializer and thus not descend our nesting too far. The second scenario
+simply requires us to reset our state when we encounter a ';', namely we
+are no longer in a 'new block'.
+        
+
+License
+=======
+
+This patch is Copyright (c) 2007 Louis R. Marascio and is released under
+the MIT license (http://www.opensource.org/licenses/mit-license.php).
+
