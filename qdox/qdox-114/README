@@ -17,11 +17,13 @@ or
         int a = 1 << 30;
 
 This patch updates the lexer to properly account for these situations.
-In the first scenario we need to recognize that we are within an array
-intializer and thus not descend our nesting too far. The second scenario
-simply requires us to reset our state when we encounter a ';', namely we
-are no longer in a 'new block'.
-        
+When the lexer tokenizes the input it fails to account for two things:
+  
+  1) Reset newMode to false when ';' is encountered, within the
+     ASSIGNMENT state.
+  
+  2) Recognize that we are within a bracket, '[', and thus when we
+     encounter a '<' or '>' token don't increase our nesting.
 
 License
 =======
