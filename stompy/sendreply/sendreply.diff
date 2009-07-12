@@ -1,0 +1,37 @@
+diff -r b90641fda28d stomp/cli.py
+--- a/stomp/cli.py	Sat May 30 15:17:28 2009 +0100
++++ b/stomp/cli.py	Sun Jul 12 10:28:23 2009 -0500
+@@ -199,6 +199,25 @@
+         else:
+             self.conn.send(destination=args[1], message=' '.join(args[2:]), transaction=self.transaction_id)
+ 
++    def sendreply(self, args):
++        '''
++        Usage:
++            sendreply <destination> <correlationId> <message>
++
++        Required Parameters:
++            destination - where to send the message
++            correlationId - the correlating identifier to send with the response
++            message - the content to send
++
++        Description:
++            Sends a reply message to a destination in the messaging system.
++        '''
++        if len(args) < 4:
++            print 'expecting: sendreply <destination> <correlationId> <message>'
++        else:
++            self.c.send(destination=args[1], message="%s\n" % ' '.join(args[3:]), headers={'correlation-id': args[2]})
++
++
+     def sendfile(self, args):
+         '''
+         Usage:
+@@ -410,4 +429,5 @@
+ # command line testing
+ #
+ if __name__ == '__main__':
+-    main()
+\ No newline at end of file
++    main()
++
