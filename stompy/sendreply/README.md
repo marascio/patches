@@ -2,7 +2,7 @@ $Id$
 
 Original Version: hg revision b90641fda28d
 Latest Version  : hg revision b90641fda28d
-Download From   : http://svn.fitnr.com/public/trunk/patches/stomppy/sendreply
+Download From   : http://github.com/marascio/patches/stomppy/sendreply
 
 Description
 ===========

@@ -2,7 +2,7 @@ $Id$
 
 Original Version: qdox-trunk revision 485
 Latest Version  : qdox-trunk revision 485
-Download From   : http://svn.fitnr.com/public/trunk/patches/qdox/qdox-114
+Download From   : http://github.com/marascio/patches/qdox/qdox-114
 
 Description
 ===========

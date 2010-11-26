@@ -2,7 +2,7 @@ $Id$
 
 Original Version: maruku-0.5.7
 Latest Version  : maruku-0.5.7
-Download From   : http://svn.fitnr.com/public/trunk/patches/maruku/support_colons_in_headers
+Download From   : http://github.com/marascio/patches/maruku/support_colons_in_headers
 
 Description
 ===========
