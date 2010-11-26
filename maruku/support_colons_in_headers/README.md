@@ -1,8 +1,9 @@
-$Id$
+Overview
+========
 
-Original Version: maruku-0.5.7
-Latest Version  : maruku-0.5.7
-Download From   : http://github.com/marascio/patches/maruku/support_colons_in_headers
+* Original Version: maruku-0.5.7
+* Latest Version: maruku-0.5.7
+* Download From: http://github.com/marascio/patches/maruku/support_colons_in_headers/
 
 Description
 ===========

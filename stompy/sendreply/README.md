@@ -1,8 +1,9 @@
-$Id$
+Overview
+========
 
-Original Version: hg revision b90641fda28d
-Latest Version  : hg revision b90641fda28d
-Download From   : http://github.com/marascio/patches/stomppy/sendreply
+* Original Version: hg revision b90641fda28d
+* Latest Version: hg revision b90641fda28d
+* Download From: http://github.com/marascio/patches/stomppy/sendreply/
 
 Description
 ===========

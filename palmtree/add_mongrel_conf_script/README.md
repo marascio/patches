@@ -1,8 +1,9 @@
-$Id$
+Overview
+========
 
-Original Version: palmtree-0.0.6
-Latest Version  : palmtree-0.0.6
-Download From   : http://github.com/marascio/patches/palmtree/add_mongrel_conf_script/mongrel_cluster.rb.diff
+* Original Version: palmtree-0.0.6
+* Latest Version: palmtree-0.0.6
+* Download From: http://github.com/marascio/patches/palmtree/add_mongrel_conf_script/
 
 Description
 ===========

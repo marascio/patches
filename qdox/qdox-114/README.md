@@ -1,8 +1,9 @@
-$Id$
+Overview
+========
 
-Original Version: qdox-trunk revision 485
-Latest Version  : qdox-trunk revision 485
-Download From   : http://github.com/marascio/patches/qdox/qdox-114
+* Original Version: qdox-trunk revision 485
+* Latest Version: qdox-trunk revision 485
+* Download From: http://github.com/marascio/patches/qdox/qdox-114/
 
 Description
 ===========

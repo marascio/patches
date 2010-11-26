@@ -1,8 +1,9 @@
-$Id$
+Overview
+========
 
-Original Version: capistrano-2.0.0
-Latest Version  : capistrano-trunk revision 7722
-Download From   : http://github.com/marascio/patches/capistrano/deploy_pending_svn_fix/
+* Original Version: capistrano-2.0.0
+* Latest Version: capistrano-trunk revision 7722
+* Download From: http://github.com/marascio/patches/capistrano/deploy_pending_svn_fix/
 
 Description
 ===========
